@@ -59,6 +59,7 @@ class Draughts(object):
     def fire(self, player, location):
         pass
 
+
     # 查看是否可以吃子
     def canEat(self, loc, player):
         index = []
