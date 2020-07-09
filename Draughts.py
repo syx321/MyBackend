@@ -198,4 +198,4 @@ class Draughts(object):
 
 test = Draughts(10, 10)
 test.showBoard()
-test
+
