@@ -1,5 +1,13 @@
 import numpy as np
 
+'''
+board中
+1为先手黑子A
+2为后手白字B
+3为先手王琪A_k
+4为后手王琪B_k
+'''
+
 vectorA1 = [(-1, -1), (-2, -2)]  # 左下
 vectorA2 = [(1, -1), (2, -2)]  # 右下
 vectorB1 = [(-1, 1), (-2, 2)]  # 左上
@@ -60,7 +68,7 @@ class Draughts(object):
         pass
 
 
-    # 查看是否可以吃子
+    # 查看是否可以吃子,player需要区分普通和王琪
     def canEat(self, loc, player):
         index = []
         if player == 'A':
@@ -145,32 +153,7 @@ class Draughts(object):
         else:
             return False
 
-    def setBoard(self, baord):
-        self.__globalBoard = baord
-
-    # 打印现在的棋盘
-    def showBoard(self):
-        for i in range(10):
-            if i == 0:
-                print('10', end='|')
-            else:
-                print(' ' + str(10 - i), end='|')
-            for j in range(10):
-                print(self.__globalBoard[i, j], end=' ')
-            print()
-
-        print('   ', end='')
-        for i in range(10):
-            print('-', end=' ')
-        print()
-
-        print('   ', end='')
-        for i in range(1, 11):
-            print(i, end=' ')
-        print()
-
     # 判断胜负,需要调用enabledLocation判断是否还有可走的位置;
-
     def gameStatus(self):
         global index_A
         global index_B
@@ -194,6 +177,30 @@ class Draughts(object):
             return 'B'
         elif index_B == False:
             return 'A'
+
+    def setBoard(self, baord):
+        self.__globalBoard = baord
+
+    # 打印现在的棋盘
+    def showBoard(self):
+        for i in range(10):
+            if i == 0:
+                print('10', end='|')
+            else:
+                print(' ' + str(10 - i), end='|')
+            for j in range(10):
+                print(self.__globalBoard[i, j], end=' ')
+            print()
+
+        print('   ', end='')
+        for i in range(10):
+            print('-', end=' ')
+        print()
+
+        print('   ', end='')
+        for i in range(1, 11):
+            print(i, end=' ')
+        print()
 
 
 test = Draughts(10, 10)
