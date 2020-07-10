@@ -12,7 +12,7 @@ vector1 = [(1, -1), (2, -2)]  # 左下
 vector2 = [(1, 1), (2, 2)]  # 右下
 vector3 = [(-1, 1), (-2, 2)]  # 右上
 vector4 = [(-1, -1), (-2, -2)]  # 左上
-vectorall = [vector1, vector2,vector3, vector4]
+vectorall = [vector1, vector2, vector3, vector4]
 
 blackBlock = []
 # 初始黑格位置
