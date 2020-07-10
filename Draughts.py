@@ -183,24 +183,27 @@ class Draughts(object):
 
     # 打印现在的棋盘
     def showBoard(self):
-        for i in range(10):
-            if i == 0:
-                print('10', end='|')
-            else:
-                print(' ' + str(10 - i), end='|')
-            for j in range(10):
-                print(self.__globalBoard[i, j], end=' ')
-            print()
+        print('   ', end='')
+        for i in range(1, 11):
+            print(i, end=' ')
+        print()
 
         print('   ', end='')
         for i in range(10):
             print('-', end=' ')
         print()
 
-        print('   ', end='')
-        for i in range(1, 11):
-            print(i, end=' ')
-        print()
+        for i in range(10):
+            if i == 0:
+                print(' 1', end='|')
+            elif i != 9:
+                print(' ' + str(i+1), end='|')
+            else:
+                print('10', end='|')
+            for j in range(10):
+                print(self.__globalBoard[i, j], end=' ')
+            print()
+
 
 
 test = Draughts(10, 10)
