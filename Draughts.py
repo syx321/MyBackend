@@ -8,12 +8,12 @@ board中
 4为后手黑王琪B_k
 '''
 
-vectorA1 = [(1, -1), (2, -2)]  # 左下
-vectorA2 = [(1, 1), (2, 2)]  # 右下
-vectorB1 = [(-1, 1), (-2, 2)]  # 右上
-vectorB2 = [(-1, -1), (-2, -2)]  # 左上
-vectorA = [vectorA1, vectorA2]
-vectorB = [vectorB1, vectorB2]
+vector1 = [(1, -1), (2, -2)]  # 左下
+vector2 = [(1, 1), (2, 2)]  # 右下
+vector3 = [(-1, 1), (-2, 2)]  # 右上
+vector4 = [(-1, -1), (-2, -2)]  # 左上
+vectorall = [vector1, vector2,vector3, vector4]
+
 blackBlock = []
 # 初始黑格位置
 for i in range(10):
@@ -37,9 +37,7 @@ class Draughts(object):
         # board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
         # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        board[0, 9] = 1
-        board[8, 9] = 1
-        board[9, 0] = 1
+        board[5, 6] = 1
         board[4, 5] = 2
 
         self.__globalBoard = board
@@ -56,10 +54,10 @@ class Draughts(object):
         #                           (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
         #                     'B_k': []  # 存储B中王的位置
         #                     }  # 为了快速查询得到棋子位置
-        self.playerState = {'A': [(0, 9), (8, 9), (9, 0)],
+        self.playerState = {'A': [(5, 6)],
                             'A_k': [],
-                            'B': [],
-                            'B_k': [(4, 5)]
+                            'B': [(4, 5)],
+                            'B_k': []
                             }
 
     # 得到棋盘状况
@@ -80,14 +78,14 @@ class Draughts(object):
     def canEat(self, loc, player):
         index = []
         if player == 'A':
-            for vector in vectorA:
+            for vector in vectorall:
                 if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState['B'] + self.playerState['B_k'] \
                         and self.__globalBoard[loc[0] + vector[1][0], loc[1] + vector[1][1]] == 0:
                     index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
             return index
 
         elif player == 'B':
-            for vector in vectorB:
+            for vector in vectorall:
                 if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState['A'] + self.playerState['A_k'] \
                         and self.__globalBoard[loc[0] + vector[1][0], loc[1] + vector[1][1]] == 0:
                     index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
@@ -104,13 +102,13 @@ class Draughts(object):
             # 初始四个方向上可走的位置
             for i in range(10):
                 for j in range(10):
-                    if (i - j) == minus and i < loc[0] and j < loc[1]:
+                    if (i - j) == minus and i <= loc[0] and j <= loc[1]:
                         vectorK1.append((i, j))
-                    elif (i + j) == add and i < loc[0] and j > loc[1]:
+                    elif (i + j) == add and i <= loc[0] and j >= loc[1]:
                         vectorK2.append((i, j))
-                    elif (i + j) == add and i > loc[0] and j < loc[1]:
+                    elif (i + j) == add and i >= loc[0] and j <= loc[1]:
                         vectorK3.append((i, j))
-                    elif (i - j) == minus and i > loc[0] and j > loc[1]:
+                    elif (i - j) == minus and i >= loc[0] and j >= loc[1]:
                         vectorK4.append((i, j))
 
             vectorK1.reverse()
@@ -123,8 +121,6 @@ class Draughts(object):
                             for i in range(v_a.index(v_b), len(v_a)):
                                 if self.__globalBoard[v_a[i][0], v_a[i][1]] == 0 \
                                         and self.__globalBoard[
-                                    v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1]] == 0 \
-                                        and self.__globalBoard[
                                     v_a[v_a.index(v_b) - 1][0], v_a[v_a.index(v_b) - 1][1]] == 0:
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
 
@@ -136,8 +132,6 @@ class Draughts(object):
                         if (v_b[0], v_b[1]) in self.playerState['A'] + self.playerState['A_k']:
                             for i in range(v_a.index(v_b), len(v_a)):
                                 if self.__globalBoard[v_a[i][0], v_a[i][1]] == 0 \
-                                        and self.__globalBoard[
-                                    v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1]] == 0 \
                                         and self.__globalBoard[
                                     v_a[v_a.index(v_b) - 1][0], v_a[v_a.index(v_b) - 1][1]] == 0:
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
@@ -228,4 +222,4 @@ class Draughts(object):
 
 
 test = Draughts(10, 10)
-print(test.canEat((4, 5), 'B_k'))
+print(test.canEat((4, 5), 'B'))
