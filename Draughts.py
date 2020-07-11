@@ -38,9 +38,8 @@ class Draughts(object):
         # board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
         # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        board[2, 3] = 1
-        board[3, 4] = 1
-        board[4, 5] = 4
+        board[4, 5] = 1
+        board[5, 4] = 2
 
         self.__globalBoard = board
         self.width = int(w)
@@ -56,10 +55,10 @@ class Draughts(object):
         #                           (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
         #                     'B_k': []  # 存储B中王的位置
         #                     }  # 为了快速查询得到棋子位置
-        self.playerState = {'A': [(2, 3), (3, 4)],
+        self.playerState = {'A': [(4, 5)],
                             'A_k': [],
-                            'B': [],
-                            'B_k': [(4, 5)]
+                            'B': [(5, 4)],
+                            'B_k': []
                             }
 
     # 得到棋盘状况
@@ -77,21 +76,29 @@ class Draughts(object):
         pass
 
     # 查看是否可以吃子,player需要区分普通和王琪,只返回能吃的子，并不判断吃完后可以到哪
-    def canEat(self, loc, player):
+    def move(self, loc, player):
         index = []
-        if player == 'A':
+
+        p = []
+        if player == 'A' or 'A_k':
+            p.extend(['A', 'B'])
+        elif player == 'B' or 'B_k':
+            p.extend(['B', 'A'])
+
+        if player == p[0]:
             for vector in vectorall:
-                if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState['B'] + self.playerState['B_k'] \
+                if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState[p[1]] + self.playerState[
+                    p[1] + '_k'] \
                         and self.__globalBoard[loc[0] + vector[1][0], loc[1] + vector[1][1]] == 0:
                     index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
             return index
 
-        elif player == 'B':
-            for vector in vectorall:
-                if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState['A'] + self.playerState['A_k'] \
-                        and self.__globalBoard[loc[0] + vector[1][0], loc[1] + vector[1][1]] == 0:
-                    index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
-            return index
+        # elif player == 'B':
+        #     for vector in vectorall:
+        #         if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState['A'] + self.playerState['A_k'] \
+        #                 and self.__globalBoard[loc[0] + vector[1][0], loc[1] + vector[1][1]] == 0:
+        #             index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
+        #     return index
         else:
             vectorK1 = []  # 左上
             vectorK2 = []  # 右上
@@ -116,10 +123,10 @@ class Draughts(object):
             vectorK1.reverse()  # 为了使点由中心向外排列
             vectorK2.reverse()
 
-            if player == 'A_k':
+            if player == p[0] + '_k':
                 for v_a in vector:  # 四个方向
                     for v_b in v_a:  # 各方向的点
-                        if (v_b[0], v_b[1]) in self.playerState['B'] + self.playerState['B_k']:  # 是敌方子
+                        if (v_b[0], v_b[1]) in self.playerState[p[1]] + self.playerState[p[1] + '_k']:  # 是敌方子
                             for i in range(v_a.index(v_b), len(v_a)):  # 历遍此子后的位置
                                 if self.isAvailable((v_a[i][0], v_a[i][1])) \
                                         and self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):
@@ -127,18 +134,18 @@ class Draughts(object):
 
                 return index
 
-            elif player == 'B_k':
-                for v_a in vector:
-                    for v_b in v_a:
-                        if (v_b[0], v_b[1]) in self.playerState['A'] + self.playerState['A_k']:
-                            for i in range(v_a.index(v_b), len(v_a)):  # 历遍此子后的位置
-                                if self.isAvailable((v_a[i][0], v_a[i][1])) \
-                                        and self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):
-                                    if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
-                return index
+            # elif player == 'B_k':
+            #     for v_a in vector:
+            #         for v_b in v_a:
+            #             if (v_b[0], v_b[1]) in self.playerState['A'] + self.playerState['A_k']:
+            #                 for i in range(v_a.index(v_b), len(v_a)):  # 历遍此子后的位置
+            #                     if self.isAvailable((v_a[i][0], v_a[i][1])) \
+            #                             and self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):
+            #                         if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
+            #     return index
 
-    # 所有可下位置,调用isAvailable
-    def enabledLocation(self, loc):
+    # 此棋所有可下位置,调用isAvailable
+    def enabledLocation(self, loc, player):
         pass
 
     # 查看此位置是否可以下棋，调用isOutOfBound
@@ -222,4 +229,4 @@ class Draughts(object):
 
 
 test = Draughts(10, 10)
-print(test.canEat((4, 5), 'B_k'))
+print(test.move((4, 5), 'A_k'))
