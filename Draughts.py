@@ -39,7 +39,9 @@ class Draughts(object):
         # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
         board[4, 5] = 3
-        board[0, 1] = 2
+        board[2, 3] = 2
+        board[3, 4] = 2
+        board[2, 7] = 2
 
         self.__globalBoard = board
         self.width = int(w)
@@ -57,7 +59,7 @@ class Draughts(object):
         #                     }  # 为了快速查询得到棋子位置
         self.playerState = {'A': [],
                             'A_k': [(4, 5)],
-                            'B': [(0, 1)],
+                            'B': [(2, 3), (3, 4), (2, 7)],
                             'B_k': []
                             }
 
@@ -75,7 +77,7 @@ class Draughts(object):
     def fire(self, player, location):
         pass
 
-    # 查看是否可以吃子,player需要区分普通和王琪,只返回能吃的子，并不判断吃完后可以到哪
+    # 查看是否可以吃子,player需要区分普通和王琪,返回能吃的子和吃完后可以到哪
     def eatAndMove(self, loc, player):
         index = []
         move = []
@@ -121,6 +123,7 @@ class Draughts(object):
                         vectorK4.append((i, j))
             vectorK1.reverse()  # 为了使点由中心向外排列
             vectorK2.reverse()
+            T = False
             if player == p[0] + '_k':
                 for v_a in vector:  # 四个方向
                     for v_b in v_a:  # 各方向的点
@@ -130,10 +133,12 @@ class Draughts(object):
                             try:
                                 if self.isAvailable(
                                         (v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
-                                    move = []
+                                    if not T:
+                                        move = []
+                                        T = True
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
                                     for i in range(v_a.index(v_b) + 1, len(v_a)):
-                                        move += [(v_a[i][0], v_a[i][1])]
+                                        if self.isAvailable((v_a[i][0], v_a[i][1])): move += [(v_a[i][0], v_a[i][1])]
                             except IndexError:
                                 break
                 return index, move
