@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 '''
 board中
@@ -7,22 +8,13 @@ board中
 3为先手白王琪A_k
 4为后手黑王琪B_k
 '''
+time_start = time.time()
 
 vector1 = [(1, -1), (2, -2)]  # 左下
 vector2 = [(1, 1), (2, 2)]  # 右下
 vector3 = [(-1, 1), (-2, 2)]  # 右上
 vector4 = [(-1, -1), (-2, -2)]  # 左上
 vectorall = [vector1, vector2, vector3, vector4]
-
-
-# blackBlock = []
-# # 初始黑格位置
-# for i in range(10):
-#     for j in range(10):
-#         if i % 2 == 0 and j % 2 != 0:
-#             blackBlock.append([i, j])
-#         elif i % 2 != 0 and j % 2 == 0:
-#             blackBlock.append([i, j])
 
 
 class Draughts(object):
@@ -38,10 +30,12 @@ class Draughts(object):
         # board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
         # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        board[4, 5] = 3
+        board[4, 5] = 1
+        board[0, 5] = 1
         board[2, 3] = 2
         board[3, 4] = 2
         board[2, 7] = 2
+        board[5, 4] = 2
 
         self.__globalBoard = board
         self.width = int(w)
@@ -57,9 +51,9 @@ class Draughts(object):
         #                           (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
         #                     'B_k': []  # 存储B中王的位置
         #                     }  # 为了快速查询得到棋子位置
-        self.playerState = {'A': [],
-                            'A_k': [(4, 5)],
-                            'B': [(2, 3), (3, 4), (2, 7)],
+        self.playerState = {'A': [(4, 5)],
+                            'A_k': [(0, 5)],
+                            'B': [(2, 3), (3, 4), (2, 7), (5, 4)],
                             'B_k': []
                             }
 
@@ -133,7 +127,7 @@ class Draughts(object):
                             try:
                                 if self.isAvailable(
                                         (v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
-                                    if not T:
+                                    if not T:  # 假设多个方向上有可吃的子，防重复初始化
                                         move = []
                                         T = True
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
@@ -227,7 +221,13 @@ class Draughts(object):
             print()
 
 
-test = Draughts(10, 10)
-eat, move = test.eatAndMove((4, 5), 'A_k')
-print(eat)
-print(move)
+if __name__ == '__main__':
+    test = Draughts(10, 10)
+    eat, move = test.eatAndMove((4, 5), 'A')
+    print(eat)
+    print(move)
+    eat, move = test.eatAndMove((0, 5), 'A_k')
+    print(eat)
+    print(move)
+    time_end = time.time()
+    print('time cost', (time_end - time_start)*1000, 'ms')
