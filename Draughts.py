@@ -38,8 +38,8 @@ class Draughts(object):
         # board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
         # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        board[5, 4] = 3
-        board[2, 3] = 2
+        board[4, 5] = 3
+        board[0, 1] = 2
 
         self.__globalBoard = board
         self.width = int(w)
@@ -56,8 +56,8 @@ class Draughts(object):
         #                     'B_k': []  # 存储B中王的位置
         #                     }  # 为了快速查询得到棋子位置
         self.playerState = {'A': [],
-                            'A_k': [(5, 4)],
-                            'B': [(2, 3)],
+                            'A_k': [(4, 5)],
+                            'B': [(0, 1)],
                             'B_k': []
                             }
 
@@ -124,13 +124,13 @@ class Draughts(object):
             if player == p[0] + '_k':
                 for v_a in vector:  # 四个方向
                     for v_b in v_a:  # 各方向的点
-                        if len(index) == 0:
+                        if len(index) == 0 and self.isAvailable(v_b):
                             move += [v_b]
                         if (v_b[0], v_b[1]) in self.playerState[p[1]] + self.playerState[p[1] + '_k']:  # 是敌方子
-                            move = []
                             try:
                                 if self.isAvailable(
                                         (v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
+                                    move = []
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
                                     for i in range(v_a.index(v_b) + 1, len(v_a)):
                                         move += [(v_a[i][0], v_a[i][1])]
@@ -223,6 +223,6 @@ class Draughts(object):
 
 
 test = Draughts(10, 10)
-eat, move = test.eatAndMove((5, 4), 'A_k')
+eat, move = test.eatAndMove((4, 5), 'A_k')
 print(eat)
 print(move)
