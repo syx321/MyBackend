@@ -93,12 +93,6 @@ class Draughts(object):
                     index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
             return index
 
-        # elif player == 'B':
-        #     for vector in vectorall:
-        #         if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in self.playerState['A'] + self.playerState['A_k'] \
-        #                 and self.__globalBoard[loc[0] + vector[1][0], loc[1] + vector[1][1]] == 0:
-        #             index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))
-        #     return index
         else:
             vectorK1 = []  # 左上
             vectorK2 = []  # 右上
@@ -133,16 +127,6 @@ class Draughts(object):
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
 
                 return index
-
-            # elif player == 'B_k':
-            #     for v_a in vector:
-            #         for v_b in v_a:
-            #             if (v_b[0], v_b[1]) in self.playerState['A'] + self.playerState['A_k']:
-            #                 for i in range(v_a.index(v_b), len(v_a)):  # 历遍此子后的位置
-            #                     if self.isAvailable((v_a[i][0], v_a[i][1])) \
-            #                             and self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):
-            #                         if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
-            #     return index
 
     # 此棋所有可下位置,调用isAvailable
     def enabledLocation(self, loc, player):
