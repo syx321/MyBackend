@@ -14,14 +14,15 @@ vector3 = [(-1, 1), (-2, 2)]  # 右上
 vector4 = [(-1, -1), (-2, -2)]  # 左上
 vectorall = [vector1, vector2, vector3, vector4]
 
-blackBlock = []
-# 初始黑格位置
-for i in range(10):
-    for j in range(10):
-        if i % 2 == 0 and j % 2 != 0:
-            blackBlock.append([i, j])
-        elif i % 2 != 0 and j % 2 == 0:
-            blackBlock.append([i, j])
+
+# blackBlock = []
+# # 初始黑格位置
+# for i in range(10):
+#     for j in range(10):
+#         if i % 2 == 0 and j % 2 != 0:
+#             blackBlock.append([i, j])
+#         elif i % 2 != 0 and j % 2 == 0:
+#             blackBlock.append([i, j])
 
 
 class Draughts(object):
@@ -37,8 +38,9 @@ class Draughts(object):
         # board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
         # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        board[5, 6] = 1
-        board[4, 5] = 2
+        board[2, 3] = 1
+        board[3, 4] = 1
+        board[4, 5] = 4
 
         self.__globalBoard = board
         self.width = int(w)
@@ -54,10 +56,10 @@ class Draughts(object):
         #                           (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
         #                     'B_k': []  # 存储B中王的位置
         #                     }  # 为了快速查询得到棋子位置
-        self.playerState = {'A': [(5, 6)],
+        self.playerState = {'A': [(2, 3), (3, 4)],
                             'A_k': [],
-                            'B': [(4, 5)],
-                            'B_k': []
+                            'B': [],
+                            'B_k': [(4, 5)]
                             }
 
     # 得到棋盘状况
@@ -111,17 +113,16 @@ class Draughts(object):
                     elif (i - j) == minus and i >= loc[0] and j >= loc[1]:
                         vectorK4.append((i, j))
 
-            vectorK1.reverse()
+            vectorK1.reverse()  # 为了使点由中心向外排列
             vectorK2.reverse()
 
             if player == 'A_k':
-                for v_a in vector:
-                    for v_b in v_a:
-                        if (v_b[0], v_b[1]) in self.playerState['B'] + self.playerState['B_k']:
-                            for i in range(v_a.index(v_b), len(v_a)):
-                                if self.__globalBoard[v_a[i][0], v_a[i][1]] == 0 \
-                                        and self.__globalBoard[
-                                    v_a[v_a.index(v_b) - 1][0], v_a[v_a.index(v_b) - 1][1]] == 0:
+                for v_a in vector:  # 四个方向
+                    for v_b in v_a:  # 各方向的点
+                        if (v_b[0], v_b[1]) in self.playerState['B'] + self.playerState['B_k']:  # 是敌方子
+                            for i in range(v_a.index(v_b), len(v_a)):  # 历遍此子后的位置
+                                if self.isAvailable((v_a[i][0], v_a[i][1])) \
+                                        and self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
 
                 return index
@@ -130,10 +131,9 @@ class Draughts(object):
                 for v_a in vector:
                     for v_b in v_a:
                         if (v_b[0], v_b[1]) in self.playerState['A'] + self.playerState['A_k']:
-                            for i in range(v_a.index(v_b), len(v_a)):
-                                if self.__globalBoard[v_a[i][0], v_a[i][1]] == 0 \
-                                        and self.__globalBoard[
-                                    v_a[v_a.index(v_b) - 1][0], v_a[v_a.index(v_b) - 1][1]] == 0:
+                            for i in range(v_a.index(v_b), len(v_a)):  # 历遍此子后的位置
+                                if self.isAvailable((v_a[i][0], v_a[i][1])) \
+                                        and self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):
                                     if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
                 return index
 
@@ -222,4 +222,4 @@ class Draughts(object):
 
 
 test = Draughts(10, 10)
-print(test.canEat((4, 5), 'B'))
+print(test.canEat((4, 5), 'B_k'))
