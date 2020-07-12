@@ -21,41 +21,41 @@ class Draughts(object):
     def __init__(self, h, w):
         board = np.zeros((10, 10), dtype=int)
         # 初始化白子A位置,白子的王用3表示
-        # board[0, 1] = board[0, 3] = board[0, 5] = board[0, 7] = board[0, 9] = 1
-        # board[1, 0] = board[1, 2] = board[1, 4] = board[1, 6] = board[1, 8] = 1
-        # board[2, 1] = board[2, 3] = board[2, 5] = board[2, 7] = board[2, 9] = 1
-        # board[3, 0] = board[3, 2] = board[3, 4] = board[3, 6] = board[3, 8] = 1
-        # # 初始化黑字B位置，黑字的王用4表示
-        # board[6, 1] = board[6, 3] = board[6, 5] = board[6, 7] = board[6, 9] = 2
-        # board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
-        # board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
-        # board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        board[4, 5] = 1
-        board[0, 5] = 1
-        board[2, 3] = 2
-        board[3, 4] = 2
-        board[2, 7] = 2
-        board[5, 4] = 2
+        board[0, 1] = board[0, 3] = board[0, 5] = board[0, 7] = board[0, 9] = 1
+        board[1, 0] = board[1, 2] = board[1, 4] = board[1, 6] = board[1, 8] = 1
+        board[2, 1] = board[2, 3] = board[2, 5] = board[2, 7] = board[2, 9] = 1
+        board[3, 0] = board[3, 2] = board[3, 4] = board[3, 6] = board[3, 8] = 1
+        # 初始化黑字B位置，黑字的王用4表示
+        board[6, 1] = board[6, 3] = board[6, 5] = board[6, 7] = board[6, 9] = 2
+        board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
+        board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
+        board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
+        # board[4, 5] = 1
+        # board[0, 5] = 1
+        # board[2, 3] = 2
+        # board[3, 4] = 2
+        # board[2, 7] = 2
+        # board[5, 4] = 2
 
         self.__globalBoard = board
         self.width = int(w)
         self.heigh = int(h)
-        # self.playerState = {'A': [(0, 1), (0, 3), (0, 5), (0, 7), (0, 9),
-        #                           (1, 0), (1, 2), (1, 4), (1, 6), (1, 8),
-        #                           (2, 1), (2, 3), (2, 5), (2, 7), (2, 9),
-        #                           (3, 0), (3, 2), (3, 4), (3, 6), (3, 8)],
-        #                     'A_k': [],  # 存储A中王的位置
-        #                     'B': [(6, 1), (6, 3), (6, 5), (6, 7), (6, 9),
-        #                           (7, 0), (7, 2), (7, 4), (7, 6), (7, 8),
-        #                           (8, 1), (8, 3), (8, 5), (8, 7), (8, 9),
-        #                           (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
-        #                     'B_k': []  # 存储B中王的位置
-        #                     }  # 为了快速查询得到棋子位置
-        self.playerState = {'A': [(4, 5)],
-                            'A_k': [(0, 5)],
-                            'B': [(2, 3), (3, 4), (2, 7), (5, 4)],
-                            'B_k': []
-                            }
+        self.playerState = {'A': [(0, 1), (0, 3), (0, 5), (0, 7), (0, 9),
+                                  (1, 0), (1, 2), (1, 4), (1, 6), (1, 8),
+                                  (2, 1), (2, 3), (2, 5), (2, 7), (2, 9),
+                                  (3, 0), (3, 2), (3, 4), (3, 6), (3, 8)],
+                            'A_k': [],  # 存储A中王的位置
+                            'B': [(6, 1), (6, 3), (6, 5), (6, 7), (6, 9),
+                                  (7, 0), (7, 2), (7, 4), (7, 6), (7, 8),
+                                  (8, 1), (8, 3), (8, 5), (8, 7), (8, 9),
+                                  (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
+                            'B_k': []  # 存储B中王的位置
+                            }  # 为了快速查询得到棋子位置
+        # self.playerState = {'A': [(4, 5)],
+        #                     'A_k': [(0, 5)],
+        #                     'B': [(2, 3), (3, 4), (2, 7), (5, 4)],
+        #                     'B_k': []
+        #                     }
 
     # 得到棋盘状况
     def getBoard(self):
@@ -125,8 +125,7 @@ class Draughts(object):
                             move += [v_b]
                         if (v_b[0], v_b[1]) in self.playerState[p[1]] + self.playerState[p[1] + '_k']:  # 是敌方子
                             try:
-                                if self.isAvailable(
-                                        (v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
+                                if self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
                                     if not T:  # 假设多个方向上有可吃的子，防重复初始化
                                         move = []
                                         T = True
@@ -138,8 +137,8 @@ class Draughts(object):
                 return index, move
 
     # 此棋所有可下位置,调用isAvailable
-    def enabledLocation(self, loc, player):
-        pass
+    # def enabledLocation(self, loc, player):
+    #     pass
 
     # 查看此位置是否可以下棋，调用isOutOfBound
     def isAvailable(self, loc):
@@ -230,4 +229,4 @@ if __name__ == '__main__':
     print(eat)
     print(move)
     time_end = time.time()
-    print('time cost', (time_end - time_start)*1000, 'ms')
+    print('time cost', (time_end - time_start) * 1000, 'ms')
