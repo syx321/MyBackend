@@ -160,7 +160,6 @@ class Draughts(object):
 
     # 判断时候在“王棋位”,由fire调用
     def isKingPosition(self, loc, player):
-
         if player == 'A' and loc[0] == 9:
             return True
         elif player == 'B' and loc[0] == 0:
