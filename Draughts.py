@@ -7,6 +7,9 @@ board中
 2为后手黑字B
 3为先手白王琪A_k
 4为后手黑王琪B_k
+ →y
+↓
+x
 '''
 time_start = time.time()
 
@@ -67,9 +70,12 @@ class Draughts(object):
     def getPlayerLocation(self, player):
         return self.playerState[player] + self.playerState[player + '_k']
 
-    # 下棋
+    # 下棋 location('from':[x,y],'to':[x,y])
     def fire(self, player, location):
-        pass
+        fromX = location['from'][0]
+        fromY = location['from'][1]
+        toX = location['to'][0]
+        toY = location['to'][1]
 
     # 查看是否可以吃子,player需要区分普通和王琪,返回能吃的子和吃完后可以到哪
     def eatAndMove(self, loc, player):
