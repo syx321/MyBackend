@@ -84,11 +84,38 @@ class Draughts(object):
 
         if (toX, toY) not in enableLocation: raise RuntimeError
 
-        while len(eat) > 0:
-            if player == 'A':
-                reshape[fromX, fromY] = 0
-                if self.isKingPosition((fromX,fromY), player):
-                    reshape[toX,toY] = 3
+        global state
+        if player == 'A':
+            reshape[fromX, fromY] = 0
+            if self.isKingPosition((fromX, fromY), player):
+                reshape[toX, toY] = 3
+                state = self.playerState['A_k']
+                player = 'A_k'
+            else:
+                reshape[toX, toY] = 1
+                state = self.playerState['A']
+        elif player == 'B':
+            reshape[fromX, fromY] = 0
+            if self.isKingPosition((fromX, fromY), player):
+                reshape[toX, toY] = 4
+                state = self.playerState['B_k']
+                player = 'B_k'
+            else:
+                reshape[toX, toY] = 2
+                state = self.playerState['B']
+        elif player == 'A_k':
+            reshape[fromX, fromY] = 0
+            reshape[toX, toY] = 3
+            state = self.playerState['A_k']
+        elif player == 'B_k':
+            reshape[fromX, fromY] = 0
+            reshape[toX, toY] = 4
+            state = self.playerState['B_k']
+
+        state[state.index((fromY, fromX))] = (toY, toX)
+        playerResult = self.gameStatus()
+
+        return reshape, playerResult, player
 
     # 查看是否可以吃子,player需要区分普通和王琪,返回能吃的子和吃完后可以到哪
     def eatAndMove(self, loc, player):
@@ -192,23 +219,41 @@ class Draughts(object):
         global index_B
         A = self.playerState['A'] + self.playerState['A_k']
         B = self.playerState['B'] + self.playerState['B_k']
+
         index_A = False
         index_B = False
-        for loc in A:
-            if self.isAvailable(loc):
+        player = self.playerState['A']
+        for p in player:
+            e, m = self.eatAndMove(p, 'A')
+            if len(m) != 0:
                 index_A = True
                 break
-        for loc in B:
-            if self.isAvailable(loc):
+        player = self.playerState['A_k']
+        for p in player:
+            e, m = self.eatAndMove(p, 'A_k')
+            if len(m) != 0:
+                index_A = True
+                break
+        player = self.playerState['B']
+        for p in player:
+            e, m = self.eatAndMove(p, 'B')
+            if len(m) != 0:
                 index_B = True
                 break
+        player = self.playerState['B_k']
+        for p in player:
+            e, m = self.eatAndMove(p, 'B_k')
+            if len(m) != 0:
+                index_B = True
+                break
+
         if len(A) == 0:
             return 'B'
         elif len(B) == 0:
             return 'A'
-        elif index_A == False:
+        elif not index_A:
             return 'B'
-        elif index_B == False:
+        elif not index_B:
             return 'A'
 
     def setBoard(self, baord):
@@ -240,11 +285,12 @@ class Draughts(object):
 
 if __name__ == '__main__':
     test = Draughts(10, 10)
-    eat, move = test.eatAndMove((4, 5), 'A')
-    print(eat)
-    print(move)
-    eat, move = test.eatAndMove((0, 5), 'A_k')
-    print(eat)
-    print(move)
-    time_end = time.time()
-    print('time cost', (time_end - time_start) * 1000, 'ms')
+    test.showBoard()
+    # eat, move = test.eatAndMove((4, 5), 'A')
+    # print(eat)
+    # print(move)
+    # eat, move = test.eatAndMove((0, 5), 'A_k')
+    # print(eat)
+    # print(move)
+    # time_end = time.time()
+    # print('time cost', (time_end - time_start) * 1000, 'ms')
