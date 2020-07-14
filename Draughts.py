@@ -34,12 +34,6 @@ class Draughts(object):
         board[7, 0] = board[7, 2] = board[7, 4] = board[7, 6] = board[7, 8] = 2
         board[8, 1] = board[8, 3] = board[8, 5] = board[8, 7] = board[8, 9] = 2
         board[9, 0] = board[9, 2] = board[9, 4] = board[9, 6] = board[9, 8] = 2
-        # board[4, 5] = 1
-        # board[0, 5] = 1
-        # board[2, 3] = 2
-        # board[3, 4] = 2
-        # board[2, 7] = 2
-        # board[5, 4] = 2
 
         self.__globalBoard = board
         self.width = int(w)
@@ -55,11 +49,6 @@ class Draughts(object):
                                   (9, 0), (9, 2), (9, 4), (9, 6), (9, 8)],
                             'B_k': []  # 存储B中王的位置
                             }  # 为了快速查询得到棋子位置
-        # self.playerState = {'A': [(4, 5)],
-        #                     'A_k': [(0, 5)],
-        #                     'B': [(2, 3), (3, 4), (2, 7), (5, 4)],
-        #                     'B_k': []
-        #                     }
 
     # 得到棋盘状况
     def getBoard(self):
@@ -182,10 +171,6 @@ class Draughts(object):
                                 break
                 return eat, move
 
-    # 此棋所有可下位置,调用isAvailable
-    # def enabledLocation(self, loc, player):
-    #     pass
-
     # 查看此位置是否可以下棋，调用isOutOfBound
     def isAvailable(self, loc):
         if self.isOutOfBound(loc):  # 判断是否越界
@@ -286,11 +271,3 @@ class Draughts(object):
 if __name__ == '__main__':
     test = Draughts(10, 10)
     test.showBoard()
-    # eat, move = test.eatAndMove((4, 5), 'A')
-    # print(eat)
-    # print(move)
-    # eat, move = test.eatAndMove((0, 5), 'A_k')
-    # print(eat)
-    # print(move)
-    # time_end = time.time()
-    # print('time cost', (time_end - time_start) * 1000, 'ms')
