@@ -7,6 +7,7 @@ board中
 2为后手黑字B
 3为先手白王琪A_k
 4为后手黑王琪B_k
+
  →y
 ↓
 x
@@ -77,9 +78,21 @@ class Draughts(object):
         toX = location['to'][0]
         toY = location['to'][1]
 
+        reshape = self.__globalBoard
+
+        eat, enableLocation = self.eatAndMove((fromX, fromY), player)
+
+        if (toX, toY) not in enableLocation: raise RuntimeError
+
+        while len(eat) > 0:
+            if player == 'A':
+                reshape[fromX, fromY] = 0
+                if self.isKingPosition((fromX,fromY), player):
+                    reshape[toX,toY] = 3
+
     # 查看是否可以吃子,player需要区分普通和王琪,返回能吃的子和吃完后可以到哪
     def eatAndMove(self, loc, player):
-        index = []
+        eat = []
         move = []
         p = []
         if player == 'A' or 'A_k':
@@ -92,14 +105,14 @@ class Draughts(object):
                 if (loc[0] + vector[0][0], loc[1] + vector[0][1]) in \
                         self.playerState[p[1]] + self.playerState[p[1] + '_k'] and \
                         self.isAvailable((loc[0] + vector[1][0], loc[1] + vector[1][1])):
-                    index.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))  # 可吃的点
+                    eat.append((loc[0] + vector[0][0], loc[1] + vector[0][1]))  # 可吃的点
                     move.append((loc[0] + vector[1][0], loc[1] + vector[1][1]))  # 吃后跳到的点
-            if len(index) == 0:  # 无子可吃
+            if len(eat) == 0:  # 无子可吃
                 if player == 'A':
                     move += [(loc[0] + 1, loc[1] - 1)] + [(loc[0] + 1, loc[1] + 1)]
                 elif player == 'B':
                     move += [(loc[0] - 1, loc[1] - 1)] + [(loc[0] - 1, loc[1] + 1)]
-            return index, move
+            return eat, move
 
         else:
             vectorK1 = []  # 左上
@@ -127,7 +140,7 @@ class Draughts(object):
             if player == p[0] + '_k':
                 for v_a in vector:  # 四个方向
                     for v_b in v_a:  # 各方向的点
-                        if len(index) == 0 and self.isAvailable(v_b):
+                        if len(eat) == 0 and self.isAvailable(v_b):
                             move += [v_b]
                         if (v_b[0], v_b[1]) in self.playerState[p[1]] + self.playerState[p[1] + '_k']:  # 是敌方子
                             try:
@@ -135,12 +148,12 @@ class Draughts(object):
                                     if not T:  # 假设多个方向上有可吃的子，防重复初始化
                                         move = []
                                         T = True
-                                    if (v_b[0], v_b[1]) not in index: index.append((v_b[0], v_b[1]))
+                                    if (v_b[0], v_b[1]) not in eat: eat.append((v_b[0], v_b[1]))
                                     for i in range(v_a.index(v_b) + 1, len(v_a)):
                                         if self.isAvailable((v_a[i][0], v_a[i][1])): move += [(v_a[i][0], v_a[i][1])]
                             except IndexError:
                                 break
-                return index, move
+                return eat, move
 
     # 此棋所有可下位置,调用isAvailable
     # def enabledLocation(self, loc, player):
