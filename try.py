@@ -8,4 +8,4 @@ def f(n):
 
 if __name__ == '__main__':
     for n, i in enumerate(f(10000)):
-        print(n, ':', i)
+        print( n, ':', i)
