@@ -1,7 +1,9 @@
 import numpy as np
 
 '''
-
+1为先手A
+2为后手B
+每个坐标表示横杠的位置
 
  →y
 ↓
@@ -13,8 +15,6 @@ class DotAndBoxes:
     def __init__(self, h, w):
         self.playerState = []
         self.__globalBoard = []
-
-
 
     # 得到棋盘状况
     def getBoard(self):
@@ -83,5 +83,5 @@ class DotAndBoxes:
 
 
 if __name__ == '__main__':
-    test = DotAndBoxes()
+    test = DotAndBoxes(6, 6)
     test.showBoard()
