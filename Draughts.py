@@ -1,5 +1,4 @@
 import numpy as np
-import time
 
 '''
 board中
@@ -12,8 +11,6 @@ board中
 ↓
 x
 '''
-time_start = time.time()
-
 vector1 = [(1, -1), (2, -2)]  # 左下
 vector2 = [(1, 1), (2, 2)]  # 右下
 vector3 = [(-1, 1), (-2, 2)]  # 右上

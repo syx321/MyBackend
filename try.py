@@ -1,11 +1,26 @@
-def f(n):
-    a = 0
-    b = 1
-    for i in range(n):
-        yield a
-        a, b = b, a + b
+from numpy import np
 
 
-if __name__ == '__main__':
-    for n, i in enumerate(f(10000)):
-        print(n, ':', i)
+def test():
+    board = np.zeros((6, 6), dtype=int)
+
+
+def showBoard():
+    print('   ', end='')
+    for i in range(1, 7):
+        print(i, end=' ')
+    print()
+
+    print('   ', end='')
+    for i in range(6):
+        print('-', end=' ')
+    print()
+
+    for i in range(6):
+        if i == 0:
+            print(' 1', end='|')
+        elif i != 5:
+            print(' ' + str(i + 1), end='|')
+        else:
+            print(' 6', end='|')
+        print()
