@@ -1,12 +1,15 @@
 import board
 import amazons
 import Draughts
+import DotsAndBoxes
 import timer
 import asyncio
 import json
 from Surakarta import Surakarta
 
+
 get_mesg = lambda x: bytes(str(json.dumps(x)), 'utf-8')
+
 
 class Room():
     def __init__(self, boardtype, boardargs, totaltime, roomId):
@@ -30,6 +33,8 @@ class Room():
             self.__board = Surakarta()
         elif boardtype == 'Draughts':
             self.__board = Draughts()
+        elif boardtype == 'DotsAndBoxes':
+            self.__board = DotsAndBoxes()
 
     # 加入玩家
     def addPlayer(self, player, order):
@@ -39,6 +44,9 @@ class Room():
             playerId = 1 if order == '1' else -1
         elif self.type == 'Draughts':
             playerId = 'B' if order == '1' else 'A'
+        elif self.type == 'DotsAndBoxes':
+            playerId = 'B' if order == '1' else 'A'
+
 
         self.player.append({'id': playerId, 'player': player, 'order': order})
         return playerId
@@ -74,8 +82,9 @@ class Room():
     async def move(self, player, location, *kw):
         board, result = self.__board.fire(player, location, *kw)
         self.history.append(board)
-        await self.notifyToOther(player, {'mesg': 'move', 'move': location, 'player': player, 'result': result, 'kw': kw[0]})
-    
+        await self.notifyToOther(player,
+                                 {'mesg': 'move', 'move': location, 'player': player, 'result': result, 'kw': kw[0]})
+
     # 通知另一方玩家
     async def notifyToOther(self, playerId, mesg):
         for i in self.player:
@@ -93,7 +102,3 @@ class Room():
             return '2'
         else:
             return '1'
-
-
-
-

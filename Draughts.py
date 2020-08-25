@@ -98,10 +98,10 @@ class Draughts(object):
             reshape[toX, toY] = 4
             state = self.playerState['B_k']
 
-        state[state.index((fromY, fromX))] = (toY, toX)
+        state[state.index((fromX, fromY))] = (toX, toY)
         playerResult = self.gameStatus()
 
-        return reshape, playerResult, player
+        return reshape, playerResult
 
     # 查看是否可以吃子,player需要区分普通和王琪,返回能吃的子和吃完后可以到哪
     def eatAndMove(self, loc, player):
@@ -157,7 +157,8 @@ class Draughts(object):
                             move += [v_b]
                         if (v_b[0], v_b[1]) in self.playerState[p[1]] + self.playerState[p[1] + '_k']:  # 是敌方子
                             try:
-                                if self.isAvailable((v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
+                                if self.isAvailable(
+                                        (v_a[v_a.index(v_b) + 1][0], v_a[v_a.index(v_b) + 1][1])):  # 敌方棋子后方是否有空位
                                     if not T:  # 假设多个方向上有可吃的子，防重复初始化
                                         move = []
                                         T = True
