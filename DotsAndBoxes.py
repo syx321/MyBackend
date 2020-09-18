@@ -15,7 +15,8 @@ x
 
 
 class DotAndBoxes(object):
-    def __init__(self, h, w):
+    def __init__(self):
+        #         0   1   2  3   4  5  6   7   8  9  10
         board = [[-1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1],  # 0
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  # 1
                  [-1, 0, -1, 0, -1, 0, -1, 0, -1, 0, -1],  # 2
@@ -31,6 +32,7 @@ class DotAndBoxes(object):
         self.playerState = {'A': [],
                             'B': [],
                             }  # 为了快速查询占领的位置
+        Used = []
 
     # 得到棋盘状况
     def getBoard(self):
@@ -40,6 +42,8 @@ class DotAndBoxes(object):
         self.__globalBoard = board
 
     def fire(self, player, loc):
+        reshape = self.__globalBoard
+
         if not self.isAvailable(loc): raise RuntimeError
 
         if player == 'A':
@@ -47,7 +51,9 @@ class DotAndBoxes(object):
         elif player == 'B':
             self.__globalBoard[loc[0]][loc[1]] = 2
 
-        playerResult = self.gameStatus()
+        playerResult = self.gameStatus(player, loc)
+
+        return reshape, playerResult
 
     # 可下位置
     def enableMove(self):
@@ -73,14 +79,54 @@ class DotAndBoxes(object):
     def isOutOfBound(self, loc):
         if loc[0] < 0 or loc[1] < 0:
             return True
-        elif loc[0] > 6 or loc[1] > 6:
+        elif loc[0] > 10 or loc[1] > 10:
             return True
         else:
             return False
 
-    def gameStatus(self):
+    def gameStatus(self, player, loc):
+        self.territory(player, loc)
         if len(self.enableMove()) == 0:
-            if
+            if len(self.playerState['A']) > len(self.playerState['B']):
+                return 'A'
+            else:
+                return 'B'
+        else:
+            return None
+
+    # 遍历连线，如果组成回路则成闭环
+    def territory(self, player, loc):
+        vector = [(1, 0), (0, -1), (-1, 0), (0, 1)]
+
+        # 找到当前放置线的节点
+        if loc[0] % 2 == 0:
+            point = [loc[0], loc[1] - 1]
+        else:
+            point = [loc[0] - 1, loc[1]]
+
+            def check(i: int, j: int) -> bool:
+                if i == point[0] and j == point[1]:
+                    return True
+
+                visited.add((i, j))
+                result = False
+                for di, dj in vector:
+                    newi, newj = i + di, j + dj
+                    if 0 <= newi < 10 and 0 <= newj < 10:
+                        if (newi, newj) not in visited:
+                            if check(newi, newj):
+                                result = True
+                                break
+
+                visited.remove((i, j))
+                return result
+
+        visited = set()
+        for x in range(10):
+            for y in range(10):
+                if check(x, y):
+                    return True
+        return False
 
     def setBoard(self, baord):
         self.__globalBoard = baord
@@ -94,7 +140,7 @@ class DotAndBoxes(object):
 
 
 if __name__ == '__main__':
-    test = DotAndBoxes(6, 6)
+    test = DotAndBoxes()
     test.showBoard()
     loc = test.enableMove()
     print(loc)
